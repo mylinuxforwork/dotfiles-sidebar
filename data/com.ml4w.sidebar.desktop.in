@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=ML4W Sidebar App
+Exec=dotfiles-sidebar
+Icon=com.ml4w.sidebar
+Terminal=false
+Type=Application
+Categories=Utility;
+Keywords=GTK;
+StartupNotify=true
+DBusActivatable=true

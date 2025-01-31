@@ -21,13 +21,14 @@ from gi.repository import Adw
 from gi.repository import Gtk
 
 @Gtk.Template(resource_path='/com/ml4w/sidebar/window.ui')
-class DotfilesSidebarWindow(Adw.PreferencesWindow):
+class DotfilesSidebarWindow(Adw.ApplicationWindow):
     __gtype_name__ = 'DotfilesSidebarWindow'
 
     ml4w_logo = Gtk.Template.Child()
     gamemode_toggle = Gtk.Template.Child()
     waybar_toggle = Gtk.Template.Child()
     dock_toggle = Gtk.Template.Child()
+    emoji_chooser = Gtk.Template.Child()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

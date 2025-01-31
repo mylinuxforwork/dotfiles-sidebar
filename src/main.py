@@ -48,12 +48,15 @@ class DotfilesSidebarApplication(Adw.Application):
                          flags=Gio.ApplicationFlags.DEFAULT_FLAGS)
 
         self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])
+        self.create_action('about', self.on_about_action)
+        self.create_action('keybindings', self.on_keybindings_action)
         self.create_action('welcome', self.on_welcome_action)
         self.create_action('settings', self.on_settings_action)
         self.create_action('hyprland', self.on_hyprland_action)
         self.create_action('wallpaper', self.on_wallpaper_action)
         self.create_action('wallpaper_random', self.on_wallpaper_random_action)
         self.create_action('wallpaper_effects', self.on_wallpaper_effects_action)
+        self.create_action('wallpaper_sddm', self.on_wallpaper_sddm_action)
         self.create_action('screenshot', self.on_screenshot_action)
         self.create_action('picker', self.on_picker_action)
         self.create_action('waybar_theme', self.on_waybar_theme_action)
@@ -71,30 +74,36 @@ class DotfilesSidebarApplication(Adw.Application):
         self.dock_toggle = win.dock_toggle
         self.gamemode_toggle = win.gamemode_toggle
         self.waybar_toggle = win.waybar_toggle
+        self.emojipicker = ""
+        self.terminal = ""
 
         win.waybar_toggle.connect("notify::active",self.on_waybar_toggle)
         win.dock_toggle.connect("notify::active",self.on_dock_toggle)
         win.gamemode_toggle.connect("notify::active",self.on_gamemode_toggle)
+        win.emoji_chooser.connect("emoji-picked", lambda _chooser, emoji: subprocess.Popen(["flatpak-spawn", "--host", "wl-copy", emoji ]))
 
         self.loadWaybar()
         self.loadGamemode()
         self.loadDock()
+        self.loadEmojiPicker()
+        self.loadTerminal()
 
         self.block_reload = False
 
         win.present()
 
     def on_welcome_action(self, widget, _):
-        subprocess.Popen(["flatpak-spawn", "--host", "com.ml4w.welcome"])
+        subprocess.Popen(["flatpak-spawn", "--host", "flatpak", "run", "com.ml4w.welcome"])
 
     def on_settings_action(self, widget, _):
-        subprocess.Popen(["flatpak-spawn", "--host", "com.ml4w.settings"])
+        subprocess.Popen(["flatpak-spawn", "--host", "flatpak", "run", "com.ml4w.settings"])
 
     def on_hyprland_action(self, widget, _):
         subprocess.Popen(["flatpak-spawn", "--host", "com.ml4w.hyprland.settings"])
 
     def on_wallpaper_action(self, widget, _):
         subprocess.Popen(["flatpak-spawn", "--host", "waypaper"])
+        self.quit()
 
     def on_wallpaper_random_action(self, widget, _):
         subprocess.Popen(["flatpak-spawn", "--host", "waypaper", "--random"])
@@ -102,11 +111,16 @@ class DotfilesSidebarApplication(Adw.Application):
     def on_wallpaper_effects_action(self, widget, _):
         subprocess.Popen(["flatpak-spawn", "--host", "bash", "-c", self.home_folder + "/.config/hypr/scripts/wallpaper-effects.sh"])
 
+    def on_wallpaper_sddm_action(self, widget, _):
+        subprocess.Popen(["flatpak-spawn", "--host", self.terminal, "--class", "dotfiles-floating", "-e", self.home_folder + "/.config/ml4w/scripts/sddm-wallpaper.sh"])
+
     def on_screenshot_action(self, widget, _):
         subprocess.Popen(["flatpak-spawn", "--host", "bash", "-c", self.home_folder + "/.config/hypr/scripts/screenshot.sh"])
+        self.quit()
 
     def on_picker_action(self, widget, _):
         subprocess.Popen(["flatpak-spawn", "--host", "hyprpicker"])
+        self.quit()
 
     def on_waybar_theme_action(self, widget, _):
         subprocess.Popen(["flatpak-spawn", "--host", "bash", "-c", self.home_folder + "/.config/waybar/themeswitcher.sh"])
@@ -153,9 +167,38 @@ class DotfilesSidebarApplication(Adw.Application):
         else:
             self.waybar_toggle.set_active(True)
 
+    # Load default app
+    def loadEmojiPicker(self):
+        with open(self.home_folder + "/.config/ml4w/settings/emojipicker.sh", 'r') as file:
+            value = file.read()
+        self.emojipicker = value.strip()
+
+    # Load default app
+    def loadTerminal(self):
+        with open(self.home_folder + "/.config/ml4w/settings/terminal.sh", 'r') as file:
+            value = file.read()
+        self.terminal = value.strip()
+
     def reloadWaybar(self):
         launch_script = self.home_folder + "/.config/waybar/launch.sh"
         subprocess.Popen(["flatpak-spawn", "--host", "setsid", launch_script, "1>/dev/null" ,"2>&1" "&"])
+
+    def on_keybindings_action(self, widget, _):
+        subprocess.Popen(["flatpak-spawn", "--host", "bash", self.home_folder + "/.config/hypr/scripts/keybindings.sh"])
+
+    # Callback for the app.about action.
+    def on_about_action(self, *args):
+        about = Adw.AboutDialog(
+            application_name="ML4W Sidebar App",
+            developer_name="Stephan Raabe",
+            version="2.9.8",
+            website="https://github.com/mylinuxforwork/dotfiles-sidebar",
+            issue_url="https://github.com/mylinuxforwork/dotfiles-sidebar/issues",
+            support_url="https://github.com/mylinuxforwork/dotfiles-sidebar/issues",
+            copyright="© 2025 Stephan Raabe",
+            license_type=Gtk.License.GPL_3_0_ONLY
+        )
+        about.present(self.props.active_window)
 
     # Add an application action.
     def create_action(self, name, callback, shortcuts=None):

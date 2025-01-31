@@ -2,24 +2,30 @@
 <interface>
   <requires lib="gtk" version="4.0"/>
   <requires lib="Adw" version="1.0"/>
-  <template class="DotfilesSidebarWindow" parent="AdwPreferencesWindow">
+  <template class="DotfilesSidebarWindow" parent="AdwApplicationWindow">
     <property name="title" translatable="yes">ML4W Sidebar</property>
-    <property name="default-width">800</property>
-    <property name="default-height">600</property>
-    <child>
-      <object class="AdwPreferencesPage" id="waybar_page">
-        <property name="title">Status Bar</property>
-        <property name="icon-name">settings-symbolic</property>
-        <child>
-          <object class="AdwPreferencesGroup">
+    <property name="default-width">400</property>
+    <property name="default-height">740</property>
+    <property name="content">
+      <object class="AdwToolbarView">
+        <child type="top">
+          <object class="AdwHeaderBar">
+            <child type="end">
+              <object class="GtkMenuButton">
+                <property name="primary">True</property>
+                <property name="icon-name">open-menu-symbolic</property>
+                <property name="tooltip-text" translatable="yes">Main Menu</property>
+                <property name="menu-model">primary_menu</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <property name="content">
+          <object class="AdwClamp">
+            <property name="maximum-size">360</property>
             <child>
               <object class="GtkBox">
                 <property name="orientation">1</property>
-                <property name="spacing">12</property>
-                <property name="margin-top">0</property>
-                <property name="margin-end">0</property>
-                <property name="margin-bottom">0</property>
-                <property name="margin-start">0</property>
 
                 <!-- ML4W Logo -->
                 <child>
@@ -31,128 +37,176 @@
                 <!-- ML4W Logo -->
 
                 <child>
-                  <object class="GtkBox">
-                    <property name="orientation">0</property>
-                    <property name="halign">3</property>
-                    <property name="spacing">0</property>
-                    <property name="margin-bottom">0</property>
-                    <property name="homogeneous">true</property>
+                    <object class="GtkBox">
+                      <property name="orientation">0</property>
+                      <property name="halign">3</property>
+                      <property name="spacing">0</property>
+                      <property name="margin-bottom">20</property>
+                      <property name="homogeneous">true</property>
+                      <style>
+                        <class name="linked"/>
+                      </style>
+
+                      <!-- Shortcut Button -->
+                      <child>
+                        <object class="GtkButton">
+                          <property name="label">Welcome</property>
+                          <property name="action-name">app.welcome</property>
+                        </object>
+                      </child>
+                      <!-- Shortcut Buttons -->
+
+                      <!-- Shortcut Button -->
+                      <child>
+                        <object class="GtkButton">
+                          <property name="label">Settings</property>
+                          <property name="action-name">app.settings</property>
+                        </object>
+                      </child>
+                      <!-- Shortcut Buttons -->
+
+                      <!-- Shortcut Button -->
+                      <child>
+                        <object class="GtkButton">
+                          <property name="label">Hyprland</property>
+                          <property name="action-name">app.hyprland</property>
+                        </object>
+                      </child>
+                      <!-- Shortcut Buttons -->
+
+                    </object>
+                  </child>
+                <child>
+                  <object class="GtkListBox">
+                    <property name="selection-mode">0</property>
                     <style>
-                      <class name="linked"/>
+                      <class name="boxed-list"/>
                     </style>
 
-                    <!-- Shortcut Button -->
-                    <child>
-                      <object class="GtkButton">
-                        <property name="label">Welcome</property>
-                        <property name="action-name">app.welcome</property>
+                <child>
+                  <object class="AdwActionRow">
+                    <property name="title">Wallpaper</property>
+                    <child type="suffix">
+                      <object class="AdwSplitButton">
+                        <property name="halign">3</property>
+                        <property name="valign">3</property>
+                        <property name="label">Set Wallpapper</property>
+                        <property name="action-name">app.wallpaper</property>
+                        <property name="menu-model">run_wallpaper_menu</property>
                       </object>
                     </child>
-                    <!-- Shortcut Buttons -->
-
-                    <!-- Shortcut Button -->
-                    <child>
-                      <object class="GtkButton">
-                        <property name="label">Settings</property>
-                        <property name="action-name">app.settings</property>
-                      </object>
-                    </child>
-                    <!-- Shortcut Buttons -->
-
-                    <!-- Shortcut Button -->
-                    <child>
-                      <object class="GtkButton">
-                        <property name="label">Hyprland</property>
-                        <property name="action-name">app.hyprland</property>
-                      </object>
-                    </child>
-                    <!-- Shortcut Buttons -->
-
                   </object>
                 </child>
+                <child>
+                  <object class="AdwActionRow">
+                    <property name="title">SDDM</property>
+                    <child type="suffix">
+                      <object class="GtkButton">
+                        <property name="halign">3</property>
+                        <property name="valign">3</property>
+                        <property name="label">Set Current Wallpapper</property>
+                        <property name="action-name">app.wallpaper_sddm</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwActionRow">
+                    <property name="title">Waybar</property>
+                    <child type="suffix">
+                      <object class="AdwSplitButton">
+                        <property name="halign">3</property>
+                        <property name="valign">3</property>
+                        <property name="label">Set Theme</property>
+                        <property name="action-name">app.waybar_theme</property>
+                        <property name="menu-model">run_waybar_menu</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwSwitchRow" id="waybar_toggle">
+                    <property name="title">Toggle Waybar</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwSwitchRow" id="dock_toggle">
+                    <property name="title">Toggle Dock</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwSwitchRow" id="gamemode_toggle">
+                    <property name="title">Toggle Gamemode</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwActionRow">
+                    <property name="title">Screenshot</property>
+                    <child type="suffix">
+                      <object class="GtkButton">
+                        <property name="halign">3</property>
+                        <property name="valign">3</property>
+                        <property name="label">Take Screenshot</property>
+                        <property name="action-name">app.screenshot</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="AdwActionRow">
+                    <property name="title">Emoji</property>
+                    <child type="suffix">
+                      <object class="GtkMenuButton" id="button">
+                        <property name="halign">3</property>
+                        <property name="valign">3</property>
+                        <property name="label">Pick Emoji</property>
+                        <property name="popover">
+                          <object class="GtkEmojiChooser" id="emoji_chooser"></object>
+                        </property>
+                      </object>
+                  </child>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="AdwActionRow">
+                    <property name="title">Picker</property>
+                    <child type="suffix">
+                      <object class="GtkButton">
+                        <property name="halign">3</property>
+                        <property name="valign">3</property>
+                        <property name="label">Pick Color</property>
+                        <property name="action-name">app.picker</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+
               </object>
             </child>
           </object>
         </child>
-
-        <child>
-          <object class="AdwPreferencesGroup">
-            <child>
-              <object class="AdwActionRow">
-                <property name="title">Wallpaper</property>
-                <child type="suffix">
-                  <object class="AdwSplitButton">
-                    <property name="halign">3</property>
-                    <property name="valign">3</property>
-                    <property name="label">Set Wallpapper</property>
-                    <property name="action-name">app.wallpaper</property>
-                    <property name="menu-model">run_wallpaper_menu</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="AdwActionRow">
-                <property name="title">Waybar</property>
-                <child type="suffix">
-                  <object class="AdwSplitButton">
-                    <property name="halign">3</property>
-                    <property name="valign">3</property>
-                    <property name="label">Set Theme</property>
-                    <property name="action-name">app.waybar_theme</property>
-                    <property name="menu-model">run_waybar_menu</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="AdwSwitchRow" id="waybar_toggle">
-                <property name="title">Toggle Waybar</property>
-              </object>
-            </child>
-            <child>
-              <object class="AdwSwitchRow" id="dock_toggle">
-                <property name="title">Toggle Dock</property>
-              </object>
-            </child>
-            <child>
-              <object class="AdwSwitchRow" id="gamemode_toggle">
-                <property name="title">Toggle Gamemode</property>
-              </object>
-            </child>
-            <child>
-              <object class="AdwActionRow">
-                <property name="title">Screenshot</property>
-                <child type="suffix">
-                  <object class="GtkButton">
-                    <property name="halign">3</property>
-                    <property name="valign">3</property>
-                    <property name="label">Take Screenshot</property>
-                    <property name="action-name">app.screenshot</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="AdwActionRow">
-                <property name="title">Picker</property>
-                <child type="suffix">
-                  <object class="GtkButton">
-                    <property name="halign">3</property>
-                    <property name="valign">3</property>
-                    <property name="label">Pick Color</property>
-                    <property name="action-name">app.picker</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-           </object>
-        </child>
-
       </object>
-   </child>
+        </property>
+      </object>
+    </property>
   </template>
-    <menu id="run_wallpaper_menu">
+  <menu id="primary_menu">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">All Key Bindings</attribute>
+        <attribute name="action">app.keybindings</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">About</attribute>
+        <attribute name="action">app.about</attribute>
+      </item>
+    </section>
+  </menu>
+  <menu id="run_wallpaper_menu">
     <section>
       <item>
         <attribute name="label">Random Wallpaper</attribute>
@@ -161,6 +215,10 @@
       <item>
         <attribute name="label">Wallpaper Effects</attribute>
         <attribute name="action">app.wallpaper_effects</attribute>
+      </item>
+      <item>
+        <attribute name="label">Set Wallpaper for SDDM</attribute>
+        <attribute name="action">app.wallpaper_sddm</attribute>
       </item>
     </section>
   </menu>

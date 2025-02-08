@@ -61,6 +61,10 @@ class DotfilesSidebarApplication(Adw.Application):
         self.create_action('picker', self.on_picker_action)
         self.create_action('waybar_theme', self.on_waybar_theme_action)
         self.create_action('waybar_reload', self.on_waybar_reload_action)
+        self.create_action('waybar_quicklinks', self.on_waybar_quicklinks)
+        self.create_action('theme_gtk', self.on_theme_gtk)
+        self.create_action('theme_qt', self.on_theme_qt)
+        self.create_action('theme_refresh', self.on_theme_refresh)
 
     # Called when the application is activated.
     def do_activate(self):
@@ -76,6 +80,7 @@ class DotfilesSidebarApplication(Adw.Application):
         self.waybar_toggle = win.waybar_toggle
         self.emojipicker = ""
         self.terminal = ""
+        self.editor = ""
 
         win.waybar_toggle.connect("notify::active",self.on_waybar_toggle)
         win.dock_toggle.connect("notify::active",self.on_dock_toggle)
@@ -87,7 +92,7 @@ class DotfilesSidebarApplication(Adw.Application):
         self.loadDock()
         self.loadEmojiPicker()
         self.loadTerminal()
-
+        self.loadEditor()
         self.block_reload = False
 
         win.present()
@@ -119,7 +124,7 @@ class DotfilesSidebarApplication(Adw.Application):
         self.quit()
 
     def on_picker_action(self, widget, _):
-        subprocess.Popen(["flatpak-spawn", "--host", "hyprpicker"])
+        subprocess.Popen(["flatpak-spawn", "--host", "bash", "-c", self.home_folder + "/.config/ml4w/settings/hyprpicker.sh"])
         self.quit()
 
     def on_waybar_theme_action(self, widget, _):
@@ -130,10 +135,10 @@ class DotfilesSidebarApplication(Adw.Application):
 
     def on_waybar_toggle(self, widget, _):
         if not self.block_reload:
-            if (os.path.exists(self.home_folder + "/.cache/waybar-disabled")):
-                os.remove(self.home_folder + "/.cache/waybar-disabled")
+            if (os.path.exists(self.home_folder + "/.config/ml4w/settings/waybar-disabled")):
+                os.remove(self.home_folder + "/.config/ml4w/settings/waybar-disabled")
             else:
-                file = open(self.home_folder + "/.cache/waybar-disabled", "w+")
+                file = open(self.home_folder + "/.config/ml4w/settings/waybar-disabled", "w+")
             self.reloadWaybar()
 
     def on_gamemode_toggle(self, widget, _):
@@ -142,30 +147,46 @@ class DotfilesSidebarApplication(Adw.Application):
 
     def on_dock_toggle(self, widget, _):
         if not self.block_reload:
-            if (os.path.exists(self.home_folder + "/.config/ml4w/settings/nwg-dock-hyprland.sh")):
-                os.remove(self.home_folder + "/.config/ml4w/settings/nwg-dock-hyprland.sh")
-                subprocess.Popen(["flatpak-spawn", "--host", "killall", "nwg-dock-hyprland"])
-            else:
-                file = open(self.home_folder + "/.config/ml4w/settings/nwg-dock-hyprland.sh", "w+")
+            if (os.path.exists(self.home_folder + "/.config/ml4w/settings/dock-disabled")):
+                os.remove(self.home_folder + "/.config/ml4w/settings/dock-disabled")
                 subprocess.Popen(["flatpak-spawn", "--host", "bash", self.home_folder + "/.config/nwg-dock-hyprland/launch.sh"])
+            else:
+                file = open(self.home_folder + "/.config/ml4w/settings/dock-disabled", "w+")
+                subprocess.Popen(["flatpak-spawn", "--host", "killall", "nwg-dock-hyprland"])
 
     def loadDock(self):
-        if os.path.isfile(self.home_folder + "/.config/ml4w/settings/nwg-dock-hyprland.sh"):
-            self.dock_toggle.set_active(True)
-        else:
+        if os.path.isfile(self.home_folder + "/.config/ml4w/settings/dock-disabled"):
             self.dock_toggle.set_active(False)
+        else:
+            self.dock_toggle.set_active(True)
 
     def loadGamemode(self):
-        if os.path.isfile(self.home_folder + "/.cache/gamemode"):
+        if os.path.isfile(self.home_folder + "/.config/ml4w/settings/gamemode-enabled"):
             self.gamemode_toggle.set_active(True)
         else:
             self.gamemode_toggle.set_active(False)
 
     def loadWaybar(self):
-        if os.path.isfile(self.home_folder + "/.cache/waybar-disabled"):
+        if os.path.isfile(self.home_folder + "/.config/ml4w/settings/waybar-disabled"):
             self.waybar_toggle.set_active(False)
         else:
             self.waybar_toggle.set_active(True)
+
+    # Open editor with quicklinks.conf
+    def on_waybar_quicklinks(self, widget, _):
+        subprocess.Popen(["flatpak-spawn", "--host", self.editor, self.home_folder + "/.config/ml4w/settings/waybar-quicklinks.json"])
+
+    # Set GTK Theme
+    def on_theme_gtk(self, widget, _):
+        subprocess.Popen(["flatpak-spawn", "--host", "nwg-look"])
+
+    # Set QT Theme
+    def on_theme_qt(self, widget, _):
+        subprocess.Popen(["flatpak-spawn", "--host", "qt6ct"])
+
+    # Refresh GTK Theme
+    def on_theme_refresh(self, widget, _):
+        subprocess.Popen(["flatpak-spawn", "--host", "bash", self.home_folder + "/.config/hypr/scripts/gtk.sh"])
 
     # Load default app
     def loadEmojiPicker(self):
@@ -178,6 +199,12 @@ class DotfilesSidebarApplication(Adw.Application):
         with open(self.home_folder + "/.config/ml4w/settings/terminal.sh", 'r') as file:
             value = file.read()
         self.terminal = value.strip()
+
+    # Load editor app
+    def loadEditor(self):
+        with open(self.home_folder + "/.config/ml4w/settings/editor.sh", 'r') as file:
+            value = file.read()
+        self.editor = value.strip()
 
     def reloadWaybar(self):
         launch_script = self.home_folder + "/.config/waybar/launch.sh"

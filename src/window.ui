@@ -99,13 +99,14 @@
                 </child>
                 <child>
                   <object class="AdwActionRow">
-                    <property name="title">SDDM</property>
+                    <property name="title">Themes</property>
                     <child type="suffix">
-                      <object class="GtkButton">
+                      <object class="AdwSplitButton">
                         <property name="halign">3</property>
                         <property name="valign">3</property>
-                        <property name="label">Set Current Wallpapper</property>
-                        <property name="action-name">app.wallpaper_sddm</property>
+                        <property name="label">Set Theme</property>
+                        <property name="action-name">app.theme_gtk</property>
+                        <property name="menu-model">run_theme_menu</property>
                       </object>
                     </child>
                   </object>
@@ -222,8 +223,28 @@
       </item>
     </section>
   </menu>
+  <menu id="run_theme_menu">
+    <section>
+      <item>
+        <attribute name="label">Set GTK Theme</attribute>
+        <attribute name="action">app.theme_gtk</attribute>
+      </item>
+      <item>
+        <attribute name="label">Set QT Theme</attribute>
+        <attribute name="action">app.theme_qt</attribute>
+      </item>
+      <item>
+        <attribute name="label">Refresh GTK Theme</attribute>
+        <attribute name="action">app.theme_refresh</attribute>
+      </item>
+    </section>
+  </menu>
   <menu id="run_waybar_menu">
     <section>
+      <item>
+        <attribute name="label">Edit Quicklinks</attribute>
+        <attribute name="action">app.waybar_quicklinks</attribute>
+      </item>
       <item>
         <attribute name="label">Reload Waybar</attribute>
         <attribute name="action">app.waybar_reload</attribute>

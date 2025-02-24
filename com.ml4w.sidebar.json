@@ -27,19 +27,14 @@
     "modules" : [
         {
             "name" : "dotfiles-sidebar",
+	    "builddir" : true,
             "buildsystem" : "meson",
             "sources" : [
                 {
                     "type" : "git",
                     "url" : "file:///home/raabe/Projects"
                 }
-            ],
-            "config-opts" : [
-                "--libdir=lib"
             ]
         }
-    ],
-    "build-options" : {
-        "env" : {        }
-    }
+    ]
 }

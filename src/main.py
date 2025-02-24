@@ -81,6 +81,7 @@ class DotfilesSidebarApplication(Adw.Application):
         self.emojipicker = ""
         self.terminal = ""
         self.editor = ""
+        self.emoji_chooser = win.emoji_chooser
 
         win.waybar_toggle.connect("notify::active",self.on_waybar_toggle)
         win.dock_toggle.connect("notify::active",self.on_dock_toggle)
@@ -104,7 +105,7 @@ class DotfilesSidebarApplication(Adw.Application):
         subprocess.Popen(["flatpak-spawn", "--host", "flatpak", "run", "com.ml4w.settings"])
 
     def on_hyprland_action(self, widget, _):
-        subprocess.Popen(["flatpak-spawn", "--host", "com.ml4w.hyprland.settings"])
+        subprocess.Popen(["flatpak-spawn", "--host", "flatpak", "run", "com.ml4w.hyprlandsettings"])
 
     def on_wallpaper_action(self, widget, _):
         subprocess.Popen(["flatpak-spawn", "--host", "waypaper"])

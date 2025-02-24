@@ -100,12 +100,15 @@ class DotfilesSidebarApplication(Adw.Application):
 
     def on_welcome_action(self, widget, _):
         subprocess.Popen(["flatpak-spawn", "--host", "flatpak", "run", "com.ml4w.welcome"])
+        self.quit()
 
     def on_settings_action(self, widget, _):
         subprocess.Popen(["flatpak-spawn", "--host", "flatpak", "run", "com.ml4w.settings"])
+        self.quit()
 
     def on_hyprland_action(self, widget, _):
         subprocess.Popen(["flatpak-spawn", "--host", "flatpak", "run", "com.ml4w.hyprlandsettings"])
+        self.quit()
 
     def on_wallpaper_action(self, widget, _):
         subprocess.Popen(["flatpak-spawn", "--host", "waypaper"])

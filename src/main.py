@@ -111,7 +111,7 @@ class DotfilesSidebarApplication(Adw.Application):
         self.quit()
 
     def on_wallpaper_action(self, widget, _):
-        subprocess.Popen(["flatpak-spawn", "--host", "waypaper"])
+        subprocess.call(["flatpak-spawn", "--host", "waypaper"])
         self.quit()
 
     def on_wallpaper_random_action(self, widget, _):

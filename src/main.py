@@ -222,7 +222,7 @@ class DotfilesSidebarApplication(Adw.Application):
         about = Adw.AboutDialog(
             application_name="ML4W Sidebar App",
             developer_name="Stephan Raabe",
-            version="2.9.8",
+            version="2.9.8.3",
             website="https://github.com/mylinuxforwork/dotfiles-sidebar",
             issue_url="https://github.com/mylinuxforwork/dotfiles-sidebar/issues",
             support_url="https://github.com/mylinuxforwork/dotfiles-sidebar/issues",

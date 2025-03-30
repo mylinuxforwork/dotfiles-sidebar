@@ -5,7 +5,7 @@
   <template class="DotfilesSidebarWindow" parent="AdwApplicationWindow">
     <property name="title" translatable="yes">ML4W Sidebar</property>
     <property name="default-width">400</property>
-    <property name="default-height">740</property>
+    <property name="default-height">700</property>
     <property name="resizable">false</property>
     <property name="content">
       <object class="AdwToolbarView">

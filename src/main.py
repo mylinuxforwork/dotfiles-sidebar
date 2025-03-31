@@ -32,14 +32,6 @@ from .window import DotfilesSidebarWindow
 # The main application singleton class.
 class DotfilesSidebarApplication(Adw.Application):
 
-    # Get ML4W Logo
-    BASE_DIR = pathlib.Path(__file__).resolve().parent
-    CUSTOM_IMAGE = str(
-        BASE_DIR.joinpath(
-            'icon.png',
-        )
-    )
-
     home_folder = os.path.expanduser('~')
     block_reload = True
 
@@ -71,9 +63,6 @@ class DotfilesSidebarApplication(Adw.Application):
         win = self.props.active_window
         if not win:
             win = DotfilesSidebarWindow(application=self)
-
-        # Set ML4W logo
-        win.ml4w_logo.set_from_file(filename=self.CUSTOM_IMAGE)
 
         self.dock_toggle = win.dock_toggle
         self.gamemode_toggle = win.gamemode_toggle
@@ -221,6 +210,7 @@ class DotfilesSidebarApplication(Adw.Application):
     def on_about_action(self, *args):
         about = Adw.AboutDialog(
             application_name="ML4W Sidebar App",
+            application_icon='com.ml4w.sidebar',
             developer_name="Stephan Raabe",
             version="2.9.8.4",
             website="https://github.com/mylinuxforwork/dotfiles-sidebar",

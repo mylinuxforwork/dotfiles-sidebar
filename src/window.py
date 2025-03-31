@@ -24,7 +24,6 @@ from gi.repository import Gtk
 class DotfilesSidebarWindow(Adw.ApplicationWindow):
     __gtype_name__ = 'DotfilesSidebarWindow'
 
-    ml4w_logo = Gtk.Template.Child()
     gamemode_toggle = Gtk.Template.Child()
     waybar_toggle = Gtk.Template.Child()
     dock_toggle = Gtk.Template.Child()

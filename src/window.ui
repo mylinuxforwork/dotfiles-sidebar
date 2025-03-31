@@ -6,7 +6,7 @@
     <property name="title" translatable="yes">ML4W Sidebar</property>
     <property name="default-width">400</property>
     <property name="default-height">700</property>
-    <property name="resizable">false</property>
+    <property name="resizable">true</property>
     <property name="content">
       <object class="AdwToolbarView">
         <child type="top">
@@ -30,9 +30,14 @@
 
                 <!-- ML4W Logo -->
                 <child>
-                  <object class="GtkImage" id="ml4w_logo">
-                    <property name="pixel-size">60</property>
-                    <property name="margin-bottom">20</property>
+                  <object class="GtkImage">
+                    <property name="name">logo</property>
+                    <property name="icon-name">com.ml4w.sidebar</property>
+                    <property name="pixel-size">98</property>
+                    <property name="margin-bottom">30</property>
+                    <style>
+                      <class name="icon-dropshadow"/>
+                    </style>
                   </object>
                 </child>
                 <!-- ML4W Logo -->

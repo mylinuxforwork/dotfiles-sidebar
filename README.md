@@ -7,7 +7,7 @@ The sidebar for the ML4W Dotfiles for Hyprland. Gives quick access to important 
 Copy the following command into your terminal.
 
 ```
-curl -s https://raw.githubusercontent.com/mylinuxforwork/packages-installer/main/setup.sh | bash -s -- -p flatpak -s https://raw.githubusercontent.com/mylinuxforwork/dotfiles-sidebar/master/com.ml4w.sidebar.pkginst com.ml4w.sidebar
+bash -c "$(curl -s https://raw.githubusercontent.com/mylinuxforwork/dotfiles-sidebar/master/setup.sh)"
 ```
 > The installation is build with ML4W Packages Installer. https://github.com/mylinuxforwork/packages-installer
 

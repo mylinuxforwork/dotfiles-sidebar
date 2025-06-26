@@ -58,6 +58,8 @@ class DotfilesSidebarApplication(Adw.Application):
         self.create_action('theme_qt', self.on_theme_qt)
         self.create_action('theme_refresh', self.on_theme_refresh)
 
+        self.current_cancellable = None
+
     # Called when the application is activated.
     def do_activate(self):
         win = self.props.active_window
@@ -100,8 +102,16 @@ class DotfilesSidebarApplication(Adw.Application):
         self.quit()
 
     def on_wallpaper_action(self, widget, _):
-        subprocess.call(["flatpak-spawn", "--host", "waypaper"])
+        task = Gio.Task.new(self, self.current_cancellable, self.on_open_waypaper_completed, None)
+        # task.set_task_data("task_data", None) # Pass our custom data instance to the task
+        task.run_in_thread(self.open_waypaper)
+
+    def open_waypaper(self, task, source_object, task_data, cancellable):
+        subprocess.Popen(["flatpak-spawn", "--host", "waypaper"])
         self.quit()
+
+    def on_open_waypaper_completed(self, source_object, result, _):
+        print("completed")
 
     def on_wallpaper_random_action(self, widget, _):
         subprocess.Popen(["flatpak-spawn", "--host", "waypaper", "--random"])
@@ -212,7 +222,7 @@ class DotfilesSidebarApplication(Adw.Application):
             application_name="ML4W Sidebar App",
             application_icon='com.ml4w.sidebar',
             developer_name="Stephan Raabe",
-            version="2.9.8.6",
+            version="2.9.8.7",
             website="https://github.com/mylinuxforwork/dotfiles-sidebar",
             issue_url="https://github.com/mylinuxforwork/dotfiles-sidebar/issues",
             support_url="https://github.com/mylinuxforwork/dotfiles-sidebar/issues",

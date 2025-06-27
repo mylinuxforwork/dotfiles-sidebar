@@ -28,6 +28,7 @@
               <object class="GtkBox">
                 <property name="orientation">1</property>
 
+
                 <!-- ML4W Logo -->
                 <child>
                   <object class="GtkImage">

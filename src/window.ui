@@ -224,10 +224,6 @@
         <attribute name="label">Wallpaper Effects</attribute>
         <attribute name="action">app.wallpaper_effects</attribute>
       </item>
-      <item>
-        <attribute name="label">Set Wallpaper for SDDM</attribute>
-        <attribute name="action">app.wallpaper_sddm</attribute>
-      </item>
     </section>
   </menu>
   <menu id="run_theme_menu">

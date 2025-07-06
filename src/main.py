@@ -48,7 +48,6 @@ class DotfilesSidebarApplication(Adw.Application):
         self.create_action('wallpaper', self.on_wallpaper_action)
         self.create_action('wallpaper_random', self.on_wallpaper_random_action)
         self.create_action('wallpaper_effects', self.on_wallpaper_effects_action)
-        self.create_action('wallpaper_sddm', self.on_wallpaper_sddm_action)
         self.create_action('screenshot', self.on_screenshot_action)
         self.create_action('picker', self.on_picker_action)
         self.create_action('waybar_theme', self.on_waybar_theme_action)
@@ -118,9 +117,6 @@ class DotfilesSidebarApplication(Adw.Application):
 
     def on_wallpaper_effects_action(self, widget, _):
         subprocess.Popen(["flatpak-spawn", "--host", "bash", "-c", self.home_folder + "/.config/hypr/scripts/wallpaper-effects.sh"])
-
-    def on_wallpaper_sddm_action(self, widget, _):
-        subprocess.Popen(["flatpak-spawn", "--host", self.terminal, "--class", "dotfiles-floating", "-e", self.home_folder + "/.config/ml4w/scripts/sddm-wallpaper.sh"])
 
     def on_screenshot_action(self, widget, _):
         subprocess.Popen(["flatpak-spawn", "--host", "bash", "-c", self.home_folder + "/.config/hypr/scripts/screenshot.sh"])

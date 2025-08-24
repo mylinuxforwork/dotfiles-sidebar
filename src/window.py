@@ -26,6 +26,7 @@ class DotfilesSidebarWindow(Adw.ApplicationWindow):
 
     gamemode_toggle = Gtk.Template.Child()
     waybar_toggle = Gtk.Template.Child()
+    sidepad_toggle = Gtk.Template.Child()
     dock_toggle = Gtk.Template.Child()
     emoji_chooser = Gtk.Template.Child()
 

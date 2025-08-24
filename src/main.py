@@ -56,6 +56,9 @@ class DotfilesSidebarApplication(Adw.Application):
         self.create_action('theme_gtk', self.on_theme_gtk)
         self.create_action('theme_qt', self.on_theme_qt)
         self.create_action('theme_refresh', self.on_theme_refresh)
+        self.create_action('show_sidepad', self.on_show_sidepad)
+        self.create_action('toggle_theme', self.on_toggle_theme)
+        self.create_action('open_sidepad_folder', self.on_open_sidepad_folder)
 
         self.current_cancellable = None
 
@@ -68,6 +71,7 @@ class DotfilesSidebarApplication(Adw.Application):
         self.dock_toggle = win.dock_toggle
         self.gamemode_toggle = win.gamemode_toggle
         self.waybar_toggle = win.waybar_toggle
+        self.sidepad_toggle = win.sidepad_toggle
         self.emojipicker = ""
         self.terminal = ""
         self.editor = ""
@@ -76,11 +80,13 @@ class DotfilesSidebarApplication(Adw.Application):
         win.waybar_toggle.connect("notify::active",self.on_waybar_toggle)
         win.dock_toggle.connect("notify::active",self.on_dock_toggle)
         win.gamemode_toggle.connect("notify::active",self.on_gamemode_toggle)
+        win.sidepad_toggle.connect("notify::active",self.on_sidepad_toggle)
         win.emoji_chooser.connect("emoji-picked", lambda _chooser, emoji: subprocess.Popen(["flatpak-spawn", "--host", "wl-copy", emoji ]))
 
         self.loadWaybar()
         self.loadGamemode()
         self.loadDock()
+        self.loadSidepad()
         self.loadEmojiPicker()
         self.loadTerminal()
         self.loadEditor()
@@ -91,6 +97,20 @@ class DotfilesSidebarApplication(Adw.Application):
     def on_welcome_action(self, widget, _):
         subprocess.Popen(["flatpak-spawn", "--host", "flatpak", "run", "com.ml4w.welcome"])
         self.quit()
+
+    def on_toggle_theme(self, widget, _):
+        subprocess.Popen(["flatpak-spawn", "--host", self.home_folder + "/.config/ml4w/scripts/toggle-theme.sh"])
+
+    def on_open_sidepad_folder(self, widget, _):
+        file = Gio.File.new_for_path(self.home_folder + "/.config/sidepad/pads")
+        file_launcher = Gtk.FileLauncher(
+            always_ask=True,
+            file=file,
+        )
+        file_launcher.launch()
+
+    def on_show_sidepad(self, widget, _):
+        subprocess.Popen(["flatpak-spawn", "--host", self.home_folder + "/.config/ml4w/scripts/sidepad.sh", "--select"])
 
     def on_settings_action(self, widget, _):
         subprocess.Popen(["flatpak-spawn", "--host", "flatpak", "run", "com.ml4w.settings"])
@@ -144,6 +164,13 @@ class DotfilesSidebarApplication(Adw.Application):
         if not self.block_reload:
             subprocess.Popen(["flatpak-spawn", "--host", "bash", self.home_folder + "/.config/hypr/scripts/gamemode.sh"])
 
+    def on_sidepad_toggle(self, widget, _):
+        if not self.block_reload:
+            if self.sidepad_toggle.get_active():
+                subprocess.Popen(["flatpak-spawn", "--host", "bash", self.home_folder + "/.config/ml4w/scripts/sidepad.sh", "--init"])
+            else:
+                subprocess.Popen(["flatpak-spawn", "--host", "bash", self.home_folder + "/.config/ml4w/scripts/sidepad.sh", "--kill"])
+
     def on_dock_toggle(self, widget, _):
         if not self.block_reload:
             if (os.path.exists(self.home_folder + "/.config/ml4w/settings/dock-disabled")):
@@ -171,6 +198,18 @@ class DotfilesSidebarApplication(Adw.Application):
         else:
             self.waybar_toggle.set_active(True)
 
+    def loadSidepad(self):
+        result = subprocess.run(["flatpak-spawn", "--host", self.home_folder + "/.config/ml4w/scripts/sidepad.sh", "--test"],
+            capture_output=True, # Captures stdout and stderr
+            text=True,           # Decodes output as text
+            check=True           # Raises a CalledProcessError if the command returns a non-zero exit code
+        )
+        captured_output = result.stdout
+        if "0" in captured_output:
+            self.sidepad_toggle.set_active(True)
+        else:
+            self.sidepad_toggle.set_active(False)
+
     # Open editor with quicklinks.conf
     def on_waybar_quicklinks(self, widget, _):
         subprocess.Popen(["flatpak-spawn", "--host", self.editor, self.home_folder + "/.config/ml4w/settings/waybar-quicklinks.json"])
@@ -178,10 +217,12 @@ class DotfilesSidebarApplication(Adw.Application):
     # Set GTK Theme
     def on_theme_gtk(self, widget, _):
         subprocess.Popen(["flatpak-spawn", "--host", "nwg-look"])
+        self.quit()
 
     # Set QT Theme
     def on_theme_qt(self, widget, _):
         subprocess.Popen(["flatpak-spawn", "--host", "qt6ct"])
+        self.quit()
 
     # Refresh GTK Theme
     def on_theme_refresh(self, widget, _):
@@ -218,7 +259,7 @@ class DotfilesSidebarApplication(Adw.Application):
             application_name="ML4W Sidebar App",
             application_icon='com.ml4w.sidebar',
             developer_name="Stephan Raabe",
-            version="2.9.9",
+            version="2.9.9.1",
             website="https://mylinuxforwork.github.io/dotfiles/ml4w-apps/sidebar",
             issue_url="https://github.com/mylinuxforwork/dotfiles-sidebar/issues",
             support_url="https://github.com/mylinuxforwork/dotfiles-sidebar/issues",

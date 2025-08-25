@@ -245,16 +245,20 @@ class DotfilesSidebarApplication(Adw.Application):
             self.waybar_toggle.set_active(True)
 
     def loadSidepad(self):
-        result = subprocess.run(["flatpak-spawn", "--host", self.home_folder + "/.config/ml4w/scripts/sidepad.sh", "--test"],
-            capture_output=True, # Captures stdout and stderr
-            text=True,           # Decodes output as text
-            check=True           # Raises a CalledProcessError if the command returns a non-zero exit code
-        )
-        captured_output = result.stdout
-        if "0" in captured_output:
-            self.sidepad_toggle.set_active(True)
-        else:
+        try:
+            result = subprocess.run(["flatpak-spawn", "--host", self.home_folder + "/.config/ml4w/scripts/sidepad.sh", "--test"],
+                capture_output=True, # Captures stdout and stderr
+                text=True,           # Decodes output as text
+                check=True           # Raises a CalledProcessError if the command returns a non-zero exit code
+            )
+            captured_output = result.stdout
+            if "0" in captured_output:
+                self.sidepad_toggle.set_active(True)
+            else:
+                self.sidepad_toggle.set_active(False)
+        except:
             self.sidepad_toggle.set_active(False)
+            self.sidepad_toggle.set_visible(False)
 
     # Open editor with quicklinks.conf
     def on_waybar_quicklinks(self, widget, _):

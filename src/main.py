@@ -172,7 +172,7 @@ class DotfilesSidebarApplication(Adw.Application):
         task.run_in_thread(self.open_waypaper)
 
     def open_waypaper(self, task, source_object, task_data, cancellable):
-        subprocess.Popen(["flatpak-spawn", "--host", "waypaper"])
+        subprocess.Popen(["flatpak-spawn", "--host", "bash", "-c", self.home_folder + "/.config/ml4w/scripts/launch-waypaper.sh"])
         self.quit()
 
     def on_open_waypaper_completed(self, source_object, result, _):

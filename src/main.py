@@ -22,11 +22,12 @@ import gi
 import subprocess
 import os
 import pathlib
+import time
 
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
 
-from gi.repository import Gtk, Gio, Adw
+from gi.repository import Gtk, Gio, Adw, GLib
 from .window import DotfilesSidebarWindow
 
 # The main application singleton class.
@@ -62,6 +63,9 @@ class DotfilesSidebarApplication(Adw.Application):
 
         self.current_cancellable = None
 
+        self.css_provider = None
+        self.gtk_css_path = self.home_folder + "/.config/gtk-4.0/colors.css"
+
     # Called when the application is activated.
     def do_activate(self):
         win = self.props.active_window
@@ -76,6 +80,8 @@ class DotfilesSidebarApplication(Adw.Application):
         self.terminal = ""
         self.editor = ""
         self.emoji_chooser = win.emoji_chooser
+
+        self.style_manager = Adw.StyleManager.get_default()
 
         win.waybar_toggle.connect("notify::active",self.on_waybar_toggle)
         win.dock_toggle.connect("notify::active",self.on_dock_toggle)
@@ -92,7 +98,47 @@ class DotfilesSidebarApplication(Adw.Application):
         self.loadEditor()
         self.block_reload = False
 
+        # Connect to color_scheme_changed signal to update UI if system changes it
+        self.style_manager.connect("notify::color-scheme", self._update_ui_from_style_manager)
+        self.style_manager.connect("notify::dark", self._update_ui_from_style_manager)
+
         win.present()
+
+    def _update_ui_from_style_manager(self, *args):
+        print("drin")
+        self.style_manager.set_color_scheme(Adw.ColorScheme.PREFER_LIGHT)
+        self._load_custom_css()
+
+    def _load_custom_css(self):
+        """Loads the custom CSS from ~/.config/gtk-4.0/gtk.css."""
+        # Get the Gtk.Display object for the application window
+        display = self.props.active_window.get_display()
+
+        # If a provider already exists, remove it first to ensure a clean reload
+        if self.css_provider:
+            # Use the static method for the display
+            Gtk.StyleContext.remove_provider_for_display(display, self.css_provider)
+            self.css_provider = None
+
+        # Create a new provider
+        self.css_provider = Gtk.CssProvider()
+
+        # Check if the file exists before loading
+        if os.path.exists(self.gtk_css_path):
+            try:
+                self.css_provider.load_from_path(self.gtk_css_path)
+                # Add the provider to the display with a high priority
+                # so it overrides default styles
+                Gtk.StyleContext.add_provider_for_display(
+                    display,
+                    self.css_provider,
+                    Gtk.STYLE_PROVIDER_PRIORITY_USER
+                )
+                print(f"Loaded CSS from: {self.gtk_css_path}")
+            except GLib.Error as e:
+                print(f"Error loading CSS from {self.gtk_css_path}: {e.message}")
+        else:
+            print(f"Custom CSS file not found at: {self.gtk_css_path}. No custom CSS applied.")
 
     def on_welcome_action(self, widget, _):
         subprocess.Popen(["flatpak-spawn", "--host", "flatpak", "run", "com.ml4w.welcome"])

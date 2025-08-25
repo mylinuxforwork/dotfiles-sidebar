@@ -173,12 +173,7 @@ class DotfilesSidebarApplication(Adw.Application):
 
     def open_waypaper(self, task, source_object, task_data, cancellable):
         try:
-            result = subprocess.run(["flatpak-spawn", "--host", self.home_folder + "/.config/ml4w/scripts/launch-waypaper.sh"],
-                capture_output=True, # Captures stdout and stderr
-                text=True,           # Decodes output as text
-                check=True           # Raises a CalledProcessError if the command returns a non-zero exit code)
-            )
-            print(result.stdout)
+            subprocess.Popen(["flatpak-spawn", "--host", "bash", "-c", self.home_folder + "/.config/ml4w/scripts/launch-waypaper.sh"])
         except:
             subprocess.Popen(["flatpak-spawn", "--host", "waypaper"])
         self.quit()

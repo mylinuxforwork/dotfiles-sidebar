@@ -21,7 +21,8 @@ action_icons = [
     join_paths(action_dir, 'gtk-color-picker-symbolic.svg'),
     join_paths(action_dir, 'smile-symbolic.svg'),
     join_paths(action_dir, 'preferences-desktop-wallpaper-symbolic.svg'),
-    join_paths(action_dir, 'edit-paste-style-symbolic.svg')
+    join_paths(action_dir, 'edit-paste-style-symbolic.svg'),
+    join_paths(action_dir, 'com.ml4w.welcome.svg')
 ]
 
 install_data(

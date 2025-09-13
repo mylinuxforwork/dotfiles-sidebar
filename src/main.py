@@ -172,14 +172,14 @@ class DotfilesSidebarApplication(Adw.Application):
         task.run_in_thread(self.open_waypaper)
 
     def open_waypaper(self, task, source_object, task_data, cancellable):
-        subprocess.Popen(["flatpak-spawn", "--host", "waypaper"])
+        subprocess.Popen(["flatpak-spawn", "--host", self.home_folder + "/.config/hypr/scripts/waypaper.sh"])
         self.quit()
 
     def on_open_waypaper_completed(self, source_object, result, _):
         print("completed")
 
     def on_wallpaper_random_action(self, widget, _):
-        subprocess.Popen(["flatpak-spawn", "--host", "waypaper", "--random"])
+        subprocess.Popen(["flatpak-spawn", "--host", self.home_folder + "/.config/hypr/scripts/waypaper.sh", "--random"])
 
     def on_wallpaper_effects_action(self, widget, _):
         subprocess.Popen(["flatpak-spawn", "--host", "bash", "-c", self.home_folder + "/.config/hypr/scripts/wallpaper-effects.sh"])
@@ -309,7 +309,7 @@ class DotfilesSidebarApplication(Adw.Application):
             application_name="ML4W Sidebar App",
             application_icon='com.ml4w.sidebar',
             developer_name="Stephan Raabe",
-            version="2.9.9.1",
+            version="2.9.9.2",
             website="https://mylinuxforwork.github.io/dotfiles/ml4w-apps/sidebar",
             issue_url="https://github.com/mylinuxforwork/dotfiles-sidebar/issues",
             support_url="https://github.com/mylinuxforwork/dotfiles-sidebar/issues",

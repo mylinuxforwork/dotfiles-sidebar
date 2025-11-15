@@ -59,6 +59,7 @@ class DotfilesSidebarApplication(Adw.Application):
         self.create_action('theme_refresh', self.on_theme_refresh)
         self.create_action('show_sidepad', self.on_show_sidepad)
         self.create_action('toggle_theme', self.on_toggle_theme)
+        self.create_action('global_theme', self.on_global_theme)
         self.create_action('open_sidepad_folder', self.on_open_sidepad_folder)
 
         self.current_cancellable = None
@@ -221,7 +222,7 @@ class DotfilesSidebarApplication(Adw.Application):
         if not self.block_reload:
             if (os.path.exists(self.home_folder + "/.config/ml4w/settings/dock-disabled")):
                 os.remove(self.home_folder + "/.config/ml4w/settings/dock-disabled")
-                subprocess.Popen(["flatpak-spawn", "--host", "bash", self.home_folder + "/.config/nwg-dock-hyprland/launch.sh"])
+                subprocess.Popen(["flatpak-spawn", "--host", "bash", "-c", self.home_folder + "/.config/nwg-dock-hyprland/launch.sh"])
             else:
                 file = open(self.home_folder + "/.config/ml4w/settings/dock-disabled", "w+")
                 subprocess.Popen(["flatpak-spawn", "--host", "killall", "nwg-dock-hyprland"])
@@ -269,6 +270,11 @@ class DotfilesSidebarApplication(Adw.Application):
         subprocess.Popen(["flatpak-spawn", "--host", "nwg-look"])
         self.quit()
 
+    # Set Global Theme
+    def on_global_theme(self, widget, _):
+        subprocess.Popen(["flatpak-spawn", "--host", "bash", self.home_folder + "/.config/ml4w/themes/themes.sh"])
+        self.quit()
+
     # Set QT Theme
     def on_theme_qt(self, widget, _):
         subprocess.Popen(["flatpak-spawn", "--host", "qt6ct"])
@@ -309,7 +315,7 @@ class DotfilesSidebarApplication(Adw.Application):
             application_name="ML4W Sidebar App",
             application_icon='com.ml4w.sidebar',
             developer_name="Stephan Raabe",
-            version="2.9.9.2",
+            version="2.9.9.4",
             website="https://mylinuxforwork.github.io/dotfiles/ml4w-apps/sidebar",
             issue_url="https://github.com/mylinuxforwork/dotfiles-sidebar/issues",
             support_url="https://github.com/mylinuxforwork/dotfiles-sidebar/issues",

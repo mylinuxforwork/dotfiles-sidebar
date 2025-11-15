@@ -175,7 +175,7 @@
                           <object class="AdwSplitButton">
                             <property name="valign">3</property>
                             <property name="icon-name">edit-paste-style-symbolic</property>
-                            <property name="action-name">app.theme_gtk</property>
+                            <property name="action-name">app.global_theme</property>
                             <property name="menu-model">run_theme_menu</property>
                             <style>
                               <class name="flat"/>

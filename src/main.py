@@ -146,7 +146,7 @@ class DotfilesSidebarApplication(Adw.Application):
         self.quit()
 
     def on_toggle_theme(self, widget, _):
-        subprocess.Popen(["flatpak-spawn", "--host", self.home_folder + "/.config/ml4w/scripts/toggle-theme.sh"])
+        subprocess.Popen(["flatpak-spawn", "--host", self.home_folder + "/.config/ml4w/scripts/ml4w-toggle-theme"])
 
     def on_open_sidepad_folder(self, widget, _):
         file = Gio.File.new_for_path(self.home_folder + "/.config/sidepad/pads")
@@ -157,7 +157,7 @@ class DotfilesSidebarApplication(Adw.Application):
         file_launcher.launch()
 
     def on_show_sidepad(self, widget, _):
-        subprocess.Popen(["flatpak-spawn", "--host", self.home_folder + "/.config/ml4w/scripts/sidepad.sh", "--select"])
+        subprocess.Popen(["flatpak-spawn", "--host", self.home_folder + "/.config/ml4w/scripts/ml4w-sidepad", "--select"])
 
     def on_settings_action(self, widget, _):
         subprocess.Popen(["flatpak-spawn", "--host", "flatpak", "run", "com.ml4w.settings"])
@@ -214,9 +214,9 @@ class DotfilesSidebarApplication(Adw.Application):
     def on_sidepad_toggle(self, widget, _):
         if not self.block_reload:
             if self.sidepad_toggle.get_active():
-                subprocess.Popen(["flatpak-spawn", "--host", "bash", self.home_folder + "/.config/ml4w/scripts/sidepad.sh", "--init"])
+                subprocess.Popen(["flatpak-spawn", "--host", "bash", self.home_folder + "/.config/ml4w/scripts/ml4w-sidepad", "--init"])
             else:
-                subprocess.Popen(["flatpak-spawn", "--host", "bash", self.home_folder + "/.config/ml4w/scripts/sidepad.sh", "--kill"])
+                subprocess.Popen(["flatpak-spawn", "--host", "bash", self.home_folder + "/.config/ml4w/scripts/ml4w-sidepad", "--kill"])
 
     def on_dock_toggle(self, widget, _):
         if not self.block_reload:
@@ -247,7 +247,7 @@ class DotfilesSidebarApplication(Adw.Application):
 
     def loadSidepad(self):
         try:
-            result = subprocess.run(["flatpak-spawn", "--host", self.home_folder + "/.config/ml4w/scripts/sidepad.sh", "--test"],
+            result = subprocess.run(["flatpak-spawn", "--host", self.home_folder + "/.config/ml4w/scripts/ml4w-sidepad", "--test"],
                 capture_output=True, # Captures stdout and stderr
                 text=True,           # Decodes output as text
                 check=True           # Raises a CalledProcessError if the command returns a non-zero exit code

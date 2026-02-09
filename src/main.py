@@ -62,6 +62,14 @@ class DotfilesSidebarApplication(Adw.Application):
         self.create_action('global_theme', self.on_global_theme)
         self.create_action('open_sidepad_folder', self.on_open_sidepad_folder)
 
+        # Migrate
+        if (os.path.exists(self.home_folder + "/.config/ml4w/scripts/ml4w-dotfiles-id")):
+            self.ml4w_toggle_theme = "ml4w-toggle-theme"
+            self.ml4w_sidepad = "ml4w-sidepad"
+        else:
+            self.ml4w_toggle_theme = "toggle-theme.sh"
+            self.ml4w_sidepad = "sidepad.sh"
+
         self.current_cancellable = None
 
         self.css_provider = None
@@ -106,7 +114,6 @@ class DotfilesSidebarApplication(Adw.Application):
         win.present()
 
     def _update_ui_from_style_manager(self, *args):
-        print("drin")
         self.style_manager.set_color_scheme(Adw.ColorScheme.PREFER_LIGHT)
         self._load_custom_css()
 
@@ -146,7 +153,7 @@ class DotfilesSidebarApplication(Adw.Application):
         self.quit()
 
     def on_toggle_theme(self, widget, _):
-        subprocess.Popen(["flatpak-spawn", "--host", self.home_folder + "/.config/ml4w/scripts/ml4w-toggle-theme"])
+        subprocess.Popen(["flatpak-spawn", "--host", self.home_folder + "/.config/ml4w/scripts/" + self.ml4w_toggle_theme])
 
     def on_open_sidepad_folder(self, widget, _):
         file = Gio.File.new_for_path(self.home_folder + "/.config/sidepad/pads")
@@ -157,7 +164,7 @@ class DotfilesSidebarApplication(Adw.Application):
         file_launcher.launch()
 
     def on_show_sidepad(self, widget, _):
-        subprocess.Popen(["flatpak-spawn", "--host", self.home_folder + "/.config/ml4w/scripts/ml4w-sidepad", "--select"])
+        subprocess.Popen(["flatpak-spawn", "--host", self.home_folder + "/.config/ml4w/scripts/" + self.ml4w_sidepad, "--select"])
 
     def on_settings_action(self, widget, _):
         subprocess.Popen(["flatpak-spawn", "--host", "flatpak", "run", "com.ml4w.settings"])
@@ -214,9 +221,9 @@ class DotfilesSidebarApplication(Adw.Application):
     def on_sidepad_toggle(self, widget, _):
         if not self.block_reload:
             if self.sidepad_toggle.get_active():
-                subprocess.Popen(["flatpak-spawn", "--host", "bash", self.home_folder + "/.config/ml4w/scripts/ml4w-sidepad", "--init"])
+                subprocess.Popen(["flatpak-spawn", "--host", "bash", self.home_folder + "/.config/ml4w/scripts/" + self.ml4w_sidepad, "--init"])
             else:
-                subprocess.Popen(["flatpak-spawn", "--host", "bash", self.home_folder + "/.config/ml4w/scripts/ml4w-sidepad", "--kill"])
+                subprocess.Popen(["flatpak-spawn", "--host", "bash", self.home_folder + "/.config/ml4w/scripts/" + self.ml4w_sidepad, "--kill"])
 
     def on_dock_toggle(self, widget, _):
         if not self.block_reload:
@@ -247,7 +254,7 @@ class DotfilesSidebarApplication(Adw.Application):
 
     def loadSidepad(self):
         try:
-            result = subprocess.run(["flatpak-spawn", "--host", self.home_folder + "/.config/ml4w/scripts/ml4w-sidepad", "--test"],
+            result = subprocess.run(["flatpak-spawn", "--host", self.home_folder + "/.config/ml4w/scripts/" + self.ml4w_sidepad, "--test"],
                 capture_output=True, # Captures stdout and stderr
                 text=True,           # Decodes output as text
                 check=True           # Raises a CalledProcessError if the command returns a non-zero exit code
@@ -315,7 +322,7 @@ class DotfilesSidebarApplication(Adw.Application):
             application_name="ML4W Sidebar App",
             application_icon='com.ml4w.sidebar',
             developer_name="Stephan Raabe",
-            version="2.9.9.4",
+            version="2.10.1",
             website="https://mylinuxforwork.github.io/dotfiles/ml4w-apps/sidebar",
             issue_url="https://github.com/mylinuxforwork/dotfiles-sidebar/issues",
             support_url="https://github.com/mylinuxforwork/dotfiles-sidebar/issues",

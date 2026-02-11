@@ -323,7 +323,7 @@ class DotfilesSidebarApplication(Adw.Application):
             application_icon='com.ml4w.sidebar',
             developer_name="Stephan Raabe",
             version="2.10.1",
-            website="https://mylinuxforwork.github.io/dotfiles/ml4w-apps/sidebar",
+            website="https://ml4w.com/os/ml4w-apps/sidebar",
             issue_url="https://github.com/mylinuxforwork/dotfiles-sidebar/issues",
             support_url="https://github.com/mylinuxforwork/dotfiles-sidebar/issues",
             copyright="© 2025 Stephan Raabe",
